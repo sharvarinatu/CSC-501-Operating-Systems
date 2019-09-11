@@ -1,0 +1,51 @@
+1. Assuming the XINU text begins at address 0x0, draw a rough diagram of XINU's memory layout with addresses derived from your experimental measurements. Include the information you uncovered from running your version of printsegaddress() and printprocstks().
+
+Ans : 
+
+	 ___________________
+	|	FREE	    |
+	|___________________|
+	|		    |  Base Pointer = 0x00ffeff8
+	|___________________|  
+	|	MAIN        |
+	|___________________|  Stack Pointer = 0x00ffef9c
+	|                   |
+	|___________________|  Limit = 0x00ffdffc
+	|       Heap        |
+	|___________________|  end   = 0x00026fd8
+	|       bss         |
+	|___________________|  edata = 0x0001e6d5
+	|       data        |
+	|___________________|  etext = 0x0001914d
+	|       text	    |
+	|___________________|  0x0
+	
+	
+	
+2. What is the difference in stack top address before and after calling printtos()? Draw a diagram to illustrate what are the contents of the items pushed into the stack between these two time points.
+
+Ans:  Stack top before calling ptinttos(): 0x00ffeff4
+	  Stack top after calling printtos(): 0x00ffefec
+	  
+	  Difference between them is 8 hex = 8*4 = 32 bits 
+	  This difference exists because when a function is called, the previous call stores return address and ebp onto the stack.
+	  
+	  ___________________
+	 |                   |   Addr: 0x00ffeff4
+	 |		     |
+	 |     EBP           |
+	 |___________________|
+	 |		     |
+	 |   Return Address  |
+	 |     		     |
+	 |___________________|  Addr:  0x00ffefec
+	 
+	 
+3. In a stack frame, local variables are stored below the top of the stack. In task 3, does your result show all the local variables declared in your printtos function? If not, can you explain that? (hint: try to disable the compiler optimization by specifing -O0 in your Makefile)
+Ans: 
+No, I cannot see the local variables in stack. This is because the compiler optimaztion is enabled. If we diable compiler optimization, we will be able to see these variables there.
+
+Also, I found out that if we use local variables, they can be seen on the stack. The variables that have only been declared, cannot be seen. 
+
+When XINU optimization is enabled, the local variables are directly stored in the registers instead of the stack. So, we cannot see them.
+	  
